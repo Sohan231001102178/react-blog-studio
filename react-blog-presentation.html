@@ -1,0 +1,1758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog Studio (CRUD) — Interactive Presentation & Architecture Showcase</title>
+  
+  <!-- Modern Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- React 18 & Babel Standalone for Instant Execution -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    :root {
+      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --bg-dark: #0b0f19;
+      --bg-card: rgba(18, 24, 38, 0.85);
+      --bg-card-hover: rgba(28, 36, 56, 0.95);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-glow: rgba(99, 102, 241, 0.35);
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --accent: #06b6d4;
+      --accent-purple: #8b5cf6;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --text-1: #f8fafc;
+      --text-2: #94a3b8;
+      --text-3: #64748b;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-xl: 28px;
+      --shadow-glow: 0 0 35px rgba(99, 102, 241, 0.25);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-dark);
+      color: var(--text-1);
+      line-height: 1.6;
+      min-height: 100vh;
+      background-image: 
+        radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.15) 0%, transparent 45%),
+        radial-gradient(circle at 90% 90%, rgba(6, 182, 212, 0.12) 0%, transparent 45%);
+      background-attachment: fixed;
+      overflow-x: hidden;
+    }
+
+    /* Top Showcase Bar */
+    .showcase-header {
+      background: rgba(11, 15, 25, 0.9);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-subtle);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      padding: 0.85rem 2rem;
+    }
+
+    .header-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(6, 182, 212, 0.15));
+      border: 1px solid rgba(99, 102, 241, 0.35);
+      padding: 0.35rem 0.85rem;
+      border-radius: 9999px;
+      font-size: 0.775rem;
+      font-weight: 700;
+      color: #c7d2fe;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .header-title-box h1 {
+      font-size: 1.2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #ffffff 40%, #a5b4fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1.2;
+    }
+
+    .header-title-box p {
+      font-size: 0.75rem;
+      color: var(--text-2);
+      margin-top: 2px;
+    }
+
+    /* Tab Navigation */
+    .nav-tabs {
+      display: flex;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 0.25rem;
+      border-radius: 9999px;
+      border: 1px solid var(--border-subtle);
+      gap: 0.25rem;
+    }
+
+    .nav-tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-2);
+      font-family: var(--font-sans);
+      font-size: 0.825rem;
+      font-weight: 600;
+      padding: 0.5rem 1.15rem;
+      border-radius: 9999px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      transition: all 0.2s ease;
+    }
+
+    .nav-tab-btn:hover {
+      color: var(--text-1);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .nav-tab-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 2px 10px rgba(99, 102, 241, 0.4);
+    }
+
+    /* Container */
+    .showcase-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* =======================================================
+       SLIDE DECK PRESENTATION MODE
+       ======================================================= */
+    .slide-deck-wrapper {
+      background: var(--bg-card);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      padding: 2.5rem;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+      position: relative;
+      min-height: 680px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .slide-progress-bar {
+      height: 4px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 9999px;
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+
+    .slide-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .slide-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .slide-meta-tag {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--accent);
+      background: rgba(6, 182, 212, 0.12);
+      padding: 0.3rem 0.75rem;
+      border-radius: 6px;
+      border: 1px solid rgba(6, 182, 212, 0.25);
+    }
+
+    .slide-title {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-top: 0.4rem;
+      background: linear-gradient(135deg, #ffffff 50%, #c7d2fe 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .slide-content-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .slide-footer-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 2.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .slide-counter {
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      color: var(--text-2);
+    }
+
+    .slide-btn {
+      background: var(--bg-card-hover);
+      color: var(--text-1);
+      border: 1px solid var(--border-subtle);
+      padding: 0.65rem 1.4rem;
+      border-radius: var(--radius-md);
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+    }
+
+    .slide-btn:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-1px);
+    }
+
+    .slide-btn.btn-accent {
+      background: var(--primary);
+      border-color: var(--primary-hover);
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.35);
+    }
+
+    .slide-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    /* Slide Cards Grid */
+    .grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.75rem;
+    }
+
+    .grid-3col {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .feature-card {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      transition: all 0.25s ease;
+    }
+
+    .feature-card:hover {
+      border-color: var(--border-glow);
+      background: rgba(15, 23, 42, 0.85);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .feature-icon-circle {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(6, 182, 212, 0.2));
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #a5b4fc;
+      margin-bottom: 1.25rem;
+    }
+
+    .feature-card h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--text-1);
+    }
+
+    .feature-card p {
+      font-size: 0.9rem;
+      color: var(--text-2);
+      line-height: 1.55;
+    }
+
+    .feature-badge {
+      display: inline-block;
+      margin-top: 1rem;
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      padding: 0.25rem 0.6rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 4px;
+      color: #93c5fd;
+    }
+
+    /* Architecture diagram box */
+    .arch-flow-box {
+      background: rgba(11, 15, 25, 0.8);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .flow-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .flow-node {
+      flex: 1;
+      background: rgba(30, 41, 59, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+
+    .flow-node:hover {
+      border-color: var(--primary);
+      box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
+    }
+
+    .flow-node-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #ffffff;
+    }
+
+    .flow-node-sub {
+      font-size: 0.75rem;
+      color: var(--text-2);
+      font-family: var(--font-mono);
+      margin-top: 0.25rem;
+    }
+
+    .flow-arrow {
+      color: var(--accent);
+      font-size: 1.25rem;
+      font-weight: 800;
+    }
+
+    /* =======================================================
+       CODE EXPLORER TAB
+       ======================================================= */
+    .code-explorer-layout {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 1.5rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      min-height: 680px;
+    }
+
+    .file-sidebar {
+      background: rgba(11, 15, 25, 0.7);
+      border-right: 1px solid var(--border-subtle);
+      padding: 1.25rem;
+      overflow-y: auto;
+      max-height: 720px;
+    }
+
+    .file-group-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-3);
+      margin: 1rem 0 0.5rem 0.5rem;
+    }
+
+    .file-tree-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 0.6rem 0.75rem;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      border: none;
+      color: var(--text-2);
+      font-family: var(--font-mono);
+      font-size: 0.825rem;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.15s ease;
+    }
+
+    .file-tree-item:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-1);
+    }
+
+    .file-tree-item.active {
+      background: rgba(99, 102, 241, 0.2);
+      border: 1px solid rgba(99, 102, 241, 0.4);
+      color: #c7d2fe;
+      font-weight: 600;
+    }
+
+    .file-viewer-main {
+      padding: 1.75rem;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .file-viewer-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 1rem;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .file-viewer-title-group h2 {
+      font-size: 1.2rem;
+      font-family: var(--font-mono);
+      color: #fff;
+    }
+
+    .file-viewer-title-group p {
+      font-size: 0.825rem;
+      color: var(--text-2);
+      margin-top: 2px;
+    }
+
+    .copy-btn {
+      background: rgba(255, 255, 255, 0.08);
+      color: #e2e8f0;
+      border: 1px solid var(--border-subtle);
+      padding: 0.45rem 0.9rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      font-family: var(--font-sans);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s ease;
+    }
+
+    .copy-btn:hover {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .code-editor-box {
+      background: #060911;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      overflow-y: auto;
+      max-height: 580px;
+      padding: 1.25rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: #e2e8f0;
+      white-space: pre;
+    }
+
+    /* =======================================================
+       LIVE APP DEMO STYLING (EMBEDDED REACT APP)
+       ======================================================= */
+    .live-demo-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    }
+
+    .live-demo-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(6, 182, 212, 0.15));
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      padding: 1rem 1.5rem;
+      border-radius: var(--radius-lg);
+      margin-bottom: 2rem;
+    }
+
+    /* Blog Card styling inside live demo */
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .demo-blog-card {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.2s ease;
+    }
+
+    .demo-blog-card:hover {
+      border-color: var(--border-glow);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    .demo-card-media {
+      aspect-ratio: 16 / 9;
+      background: #000;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .demo-card-media img, .demo-card-media iframe {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border: none;
+    }
+
+    .demo-card-body {
+      padding: 1.25rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .demo-card-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.775rem;
+      color: var(--text-3);
+      margin-bottom: 0.5rem;
+    }
+
+    .demo-card-word-count {
+      color: #93c5fd;
+      font-family: var(--font-mono);
+      background: rgba(59, 130, 246, 0.1);
+      padding: 0.1rem 0.45rem;
+      border-radius: 4px;
+    }
+
+    .demo-card-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.5rem;
+      line-height: 1.35;
+    }
+
+    .demo-card-text {
+      font-size: 0.85rem;
+      color: var(--text-2);
+      line-height: 1.5;
+      margin-bottom: 1rem;
+      flex: 1;
+    }
+
+    .demo-card-actions {
+      display: flex;
+      border-top: 1px solid var(--border-subtle);
+      padding: 0.5rem 0.75rem;
+      gap: 0.5rem;
+      background: rgba(0, 0, 0, 0.25);
+    }
+
+    .demo-action-btn {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--text-2);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.4rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.3rem;
+    }
+
+    .demo-action-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+
+    .demo-action-btn.btn-delete:hover {
+      background: rgba(239, 68, 68, 0.2);
+      color: #f87171;
+    }
+
+    /* Live Form Box */
+    .demo-form-box {
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .demo-input, .demo-textarea {
+      width: 100%;
+      background: rgba(6, 9, 17, 0.8);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 0.75rem 1rem;
+      color: #fff;
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+      transition: border 0.2s ease;
+    }
+
+    .demo-input:focus, .demo-textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .demo-textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    .demo-word-badge {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 9999px;
+      font-weight: 600;
+    }
+
+    .badge-ok {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+    }
+
+    .badge-danger {
+      background: rgba(239, 68, 68, 0.2);
+      color: #f87171;
+    }
+
+    .banner-danger {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius-sm);
+      margin-bottom: 1rem;
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 900px) {
+      .grid-2col, .grid-3col, .code-explorer-layout {
+        grid-template-columns: 1fr;
+      }
+      .header-inner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="presentation-root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useMemo } = React;
+
+    // Code files registry loaded from project specification
+    const PROJECT_FILES = [
+      {
+        path: "db.json",
+        category: "Mock REST API",
+        summary: "Database served by json-server --watch db.json --port 5000",
+        code: `{
+  "blogs": [
+    {
+      "id": "1",
+      "title": "Getting Started with Modern Web Development",
+      "content": "A comprehensive guide exploring component lifecycles, states, and hooks. Modern frontend development emphasizes modular architecture, reusable components, and reactive data flow. By decoupling API logic into dedicated services and custom hooks, applications maintain exceptional scalability, testability, and clear separation of concerns across teams.",
+      "wordCount": 46,
+      "imageUrl": "https://picsum.photos/seed/tech/800/400",
+      "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+      "createdAt": "2026-11-08T09:30:00.000Z"
+    },
+    {
+      "id": "2",
+      "title": "Mastering React Hooks and Custom State Architecture",
+      "content": "Custom hooks represent one of the most powerful paradigms introduced to the React ecosystem. By encapsulating stateful logic such as real-time word counting, network request debouncing, and API error recovery inside isolated functions like useBlogs and useWordCount, your UI presentation components remain clean, declarative, and focused solely on visual rendering.",
+      "wordCount": 54,
+      "imageUrl": "https://picsum.photos/seed/reacthooks/800/400",
+      "videoUrl": "",
+      "createdAt": "2026-11-08T10:15:00.000Z"
+    },
+    {
+      "id": "3",
+      "title": "Building Resilient REST API Integrations with Axios",
+      "content": "Reliable data fetching requires robust error handling, loading states, and network timeouts. Implementing centralized Axios instances allows developers to configure base URLs, global request interceptors, authorization headers, and unified error parsing. Paired with informative UI feedback states like loading spinners and retry banners, users always stay informed of system status.",
+      "wordCount": 51,
+      "imageUrl": "https://picsum.photos/seed/api/800/400",
+      "videoUrl": "https://www.youtube.com/embed/SqcY0GlETPk",
+      "createdAt": "2026-11-08T10:45:00.000Z"
+    }
+  ]
+}`
+      },
+      {
+        path: "src/api/blogService.js",
+        category: "API Service Layer",
+        summary: "Centralized Axios instance & REST methods: getAll, getById, create, update, remove",
+        code: `import axios from 'axios';
+
+const API_BASE_URL = 'http://localhost:5000/blogs';
+
+const apiClient = axios.create({
+  baseURL: API_BASE_URL,
+  headers: { 'Content-Type': 'application/json' },
+  timeout: 5000,
+});
+
+export const blogService = {
+  async getAll(search = '') {
+    const url = search ? \`?q=\${encodeURIComponent(search)}\` : '';
+    const res = await apiClient.get(url);
+    return res.data;
+  },
+  async getById(id) {
+    const res = await apiClient.get(\`/\${id}\`);
+    return res.data;
+  },
+  async create(blogData) {
+    const payload = { ...blogData, createdAt: new Date().toISOString() };
+    const res = await apiClient.post('', payload);
+    return res.data;
+  },
+  async update(id, blogData) {
+    const res = await apiClient.put(\`/\${id}\`, blogData);
+    return res.data;
+  },
+  async remove(id) {
+    await apiClient.delete(\`/\${id}\`);
+    return true;
+  }
+};
+
+export default blogService;`
+      },
+      {
+        path: "src/hooks/useWordCount.js",
+        category: "Custom Hook",
+        summary: "Tokenizes whitespace: trim().split(/\\s+/).filter(Boolean).length & limits to 1000 words",
+        code: `import { useMemo } from 'react';
+
+/**
+ * Custom hook to calculate word count and enforce the 1,000-word constraint.
+ */
+export function useWordCount(text = '', maxWords = 1000) {
+  return useMemo(() => {
+    if (!text || typeof text !== 'string') {
+      return { wordCount: 0, isOverLimit: false, excessWords: 0, percentage: 0, remainingWords: maxWords };
+    }
+
+    const trimmed = text.trim();
+    const words = trimmed ? trimmed.split(/\\s+/).filter(Boolean) : [];
+    const count = words.length;
+    const isOver = count > maxWords;
+    const excess = isOver ? count - maxWords : 0;
+    const remaining = isOver ? 0 : maxWords - count;
+    const percentage = Math.min(100, Math.round((count / maxWords) * 100));
+
+    return {
+      wordCount: count,
+      isOverLimit: isOver,
+      excessWords: excess,
+      percentage,
+      remainingWords: remaining,
+      isValid: !isOver && count > 0
+    };
+  }, [text, maxWords]);
+}
+
+export default useWordCount;`
+      },
+      {
+        path: "src/hooks/useBlogs.js",
+        category: "Custom Hook",
+        summary: "Coordinates API state, loading spinner, error feedback, search debounce & mutations",
+        code: `import { useState, useEffect, useCallback } from 'react';
+import blogService from '../api/blogService';
+
+export function useBlogs() {
+  const [blogs, setBlogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const loadBlogs = useCallback(async (query = searchQuery) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await blogService.getAll(query);
+      setBlogs(data);
+    } catch (err) {
+      setError(err.message || 'Failed to fetch blogs from json-server.');
+    } finally {
+      setLoading(false);
+    }
+  }, [searchQuery]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      loadBlogs(searchQuery);
+    }, 250);
+    return () => clearTimeout(timer);
+  }, [searchQuery, loadBlogs]);
+
+  const addBlog = async (newBlog) => {
+    const created = await blogService.create(newBlog);
+    setBlogs(prev => [created, ...prev]);
+    return created;
+  };
+
+  const editBlog = async (id, updated) => {
+    const res = await blogService.update(id, updated);
+    setBlogs(prev => prev.map(b => (String(b.id) === String(id) ? res : b)));
+    return res;
+  };
+
+  const deleteBlog = async (id) => {
+    await blogService.remove(id);
+    setBlogs(prev => prev.filter(b => String(b.id) !== String(id)));
+  };
+
+  return { blogs, loading, error, searchQuery, setSearchQuery, loadBlogs, addBlog, editBlog, deleteBlog };
+}
+
+export default useBlogs;`
+      },
+      {
+        path: "src/components/BlogForm.jsx",
+        category: "UI Component",
+        summary: "Shared create/edit form with live 1,000-word validation blocker and excess warning",
+        code: `import React, { useState, useEffect } from 'react';
+import useWordCount from '../hooks/useWordCount';
+
+export function BlogForm({ initialData = null, onSubmit, onCancel }) {
+  const [formData, setFormData] = useState({
+    title: initialData?.title || '',
+    imageUrl: initialData?.imageUrl || '',
+    videoUrl: initialData?.videoUrl || '',
+    content: initialData?.content || ''
+  });
+
+  const { wordCount, isOverLimit, excessWords, percentage } = useWordCount(formData.content, 1000);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (isOverLimit || !formData.title.trim() || !formData.content.trim()) return;
+    onSubmit({ ...formData, wordCount });
+  };
+
+  return (
+    <form className="blog-form" onSubmit={handleSubmit}>
+      <h2>{initialData ? 'Edit Blog Post' : 'Create New Blog Post'}</h2>
+      
+      <input
+        type="text"
+        placeholder="Post Title"
+        value={formData.title}
+        onChange={e => setFormData({ ...formData, title: e.target.value })}
+        required
+      />
+
+      <input
+        type="url"
+        placeholder="Image URL (optional)"
+        value={formData.imageUrl}
+        onChange={e => setFormData({ ...formData, imageUrl: e.target.value })}
+      />
+
+      <input
+        type="url"
+        placeholder="Video URL (YouTube/MP4)"
+        value={formData.videoUrl}
+        onChange={e => setFormData({ ...formData, videoUrl: e.target.value })}
+      />
+
+      <div className="counter-row">
+        <span>Content</span>
+        <span className={isOverLimit ? 'danger-badge' : 'ok-badge'}>
+          {wordCount} / 1,000 words
+        </span>
+      </div>
+
+      <textarea
+        rows="8"
+        placeholder="Write your article..."
+        value={formData.content}
+        onChange={e => setFormData({ ...formData, content: e.target.value })}
+      />
+
+      {isOverLimit && (
+        <div className="limit-alert">
+          Warning: Exceeds 1,000 words limit by {excessWords} words! Submission disabled.
+        </div>
+      )}
+
+      <button type="submit" disabled={isOverLimit || !formData.title.trim()}>
+        {initialData ? 'Update Post' : 'Publish Post'}
+      </button>
+    </form>
+  );
+}`
+      },
+      {
+        path: "src/components/BlogCard.jsx",
+        category: "UI Component",
+        summary: "Responsive card preview with conditional media rendering & CRUD action triggers",
+        code: `import React from 'react';
+import MediaViewer from './MediaViewer';
+
+export function BlogCard({ blog, onView, onEdit, onDelete }) {
+  return (
+    <article className="blog-card">
+      <MediaViewer imageUrl={blog.imageUrl} videoUrl={blog.videoUrl} title={blog.title} isCard={true} />
+      <div className="card-body">
+        <div className="meta">
+          <span>{new Date(blog.createdAt).toLocaleDateString()}</span>
+          <span className="word-count">{blog.wordCount} words</span>
+        </div>
+        <h3 onClick={() => onView(blog)}>{blog.title}</h3>
+        <p>{blog.content.substring(0, 150)}...</p>
+      </div>
+      <div className="actions">
+        <button onClick={() => onView(blog)}>Read</button>
+        <button onClick={() => onEdit(blog)}>Edit</button>
+        <button onClick={() => onDelete(blog.id)}>Delete</button>
+      </div>
+    </article>
+  );
+}
+
+export default BlogCard;`
+      },
+      {
+        path: "src/components/MediaViewer.jsx",
+        category: "UI Component",
+        summary: "Responsive media frame: handles YouTube embeds, HTML5 MP4 videos, and image fallbacks",
+        code: `import React from 'react';
+
+export function MediaViewer({ imageUrl, videoUrl, title = 'Media' }) {
+  if (videoUrl) {
+    let embedSrc = videoUrl;
+    const ytMatch = videoUrl.match(/(?:youtube\\.com\\/watch\\?v=|youtu\\.be\\/)([^&\\s]+)/);
+    if (ytMatch && ytMatch[1]) {
+      embedSrc = \`https://www.youtube.com/embed/\${ytMatch[1]}\`;
+    }
+    return (
+      <div className="media-frame">
+        <iframe src={embedSrc} title={title} allowFullScreen className="media-content" />
+      </div>
+    );
+  }
+
+  if (imageUrl) {
+    return (
+      <div className="media-frame">
+        <img src={imageUrl} alt={title} className="media-content" />
+      </div>
+    );
+  }
+
+  return <div className="media-frame placeholder">No Media</div>;
+}
+
+export default MediaViewer;`
+      },
+      {
+        path: "src/components/SearchBar.jsx",
+        category: "UI Component",
+        summary: "Controlled search input capturing user keystrokes with clear button & match counter",
+        code: `import React from 'react';
+
+export function SearchBar({ value, onChange, onClear, totalMatches }) {
+  return (
+    <div className="search-bar">
+      <input
+        type="text"
+        placeholder="Search blogs by title or content keywords..."
+        value={value}
+        onChange={e => onChange(e.target.value)}
+      />
+      {value && <button onClick={onClear}>✕</button>}
+      {value && <span>{totalMatches} matches</span>}
+    </div>
+  );
+}
+
+export default SearchBar;`
+      },
+      {
+        path: "src/App.jsx",
+        category: "Coordinator",
+        summary: "Coordinates views (List, Add, Edit, Detail) and triggers notifications",
+        code: `import React, { useState } from 'react';
+import useBlogs from './hooks/useBlogs';
+import SearchBar from './components/SearchBar';
+import BlogList from './components/BlogList';
+import BlogForm from './components/BlogForm';
+
+export function App() {
+  const { blogs, loading, error, searchQuery, setSearchQuery, loadBlogs, addBlog, editBlog, deleteBlog } = useBlogs();
+  const [activeView, setActiveView] = useState('list');
+  const [editingTarget, setEditingTarget] = useState(null);
+
+  return (
+    <div className="app">
+      <header>
+        <h1>Blog Studio</h1>
+        {activeView === 'list' ? (
+          <button onClick={() => setActiveView('add')}>Write Post</button>
+        ) : (
+          <button onClick={() => setActiveView('list')}>Back to List</button>
+        )}
+      </header>
+
+      {activeView === 'add' || activeView === 'edit' ? (
+        <BlogForm
+          initialData={editingTarget}
+          onSubmit={async (data) => {
+            if (activeView === 'edit') await editBlog(editingTarget.id, data);
+            else await addBlog(data);
+            setActiveView('list');
+          }}
+          onCancel={() => setActiveView('list')}
+        />
+      ) : (
+        <>
+          <SearchBar value={searchQuery} onChange={setSearchQuery} onClear={() => setSearchQuery('')} totalMatches={blogs.length} />
+          <BlogList blogs={blogs} loading={loading} error={error} onRetry={loadBlogs} onEdit={(b) => { setEditingTarget(b); setActiveView('edit'); }} onDelete={deleteBlog} />
+        </>
+      )}
+    </div>
+  );
+}
+
+export default App;`
+      }
+    ];
+
+    // Presentation Slides Data
+    const SLIDES = [
+      {
+        id: "intro",
+        tag: "Assignment 9 • Technical Specification",
+        title: "React Blog Application (CRUD Architecture)",
+        subtitle: "Integration of React.js, Axios, and Mock REST API (JSON Server) with Validation",
+        render: () => (
+          <div className="grid-2col">
+            <div className="feature-card">
+              <div className="feature-icon-circle">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+              </div>
+              <h3>System Objective</h3>
+              <p>
+                Demonstrates a production-grade <strong>Create, Read, Update, Delete (CRUD)</strong> architecture in modern React.js.
+                Communicates over HTTP using a centralized Axios client targeting a local <code>json-server</code> REST database.
+              </p>
+              <span className="feature-badge">Port 5000 • db.json REST API</span>
+            </div>
+
+            <div className="feature-card">
+              <div className="feature-icon-circle">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              </div>
+              <h3>Key Engineering Highlights</h3>
+              <ul style={{ paddingLeft: '1.25rem', color: 'var(--text-2)', fontSize: '0.9rem', lineHeight: '1.7' }}>
+                <li><strong>1,000-Word Constraint:</strong> Tokenized word counting on every keystroke with submission blocker.</li>
+                <li><strong>Responsive Media Viewer:</strong> Seamless YouTube iframe and MP4 player rendering.</li>
+                <li><strong>Debounced Search:</strong> Instant title/body keyword filtering without page reloads.</li>
+                <li><strong>Three Feedback States:</strong> Loading spinner, error retry banner, and empty prompt.</li>
+              </ul>
+              <span className="feature-badge">Modular Component Hierarchy</span>
+            </div>
+          </div>
+        )
+      },
+      {
+        id: "requirements",
+        tag: "Section 1 • Core Requirements Matrix",
+        title: "Requirement Specifications & Implementation Strategies",
+        subtitle: "Exact architectural alignment with Assignment 9 engineering rubric",
+        render: () => (
+          <div className="grid-3col">
+            <div className="feature-card">
+              <div className="feature-icon-circle">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
+              </div>
+              <h3>1. Media Support</h3>
+              <p>Posts accept title, text, image URLs, and embedded video URLs (YouTube/MP4). Previews render conditionally inside responsive 16:9 cards.</p>
+              <span className="feature-badge">MediaViewer.jsx</span>
+            </div>
+
+            <div className="feature-card">
+              <div className="feature-icon-circle">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              </div>
+              <h3>2. 1,000-Word Ceiling</h3>
+              <p>Strict word cap evaluated per keystroke via whitespace tokenization. Exceeding 1,000 words triggers a warning alert and disables submission.</p>
+              <span className="feature-badge">useWordCount.js</span>
+            </div>
+
+            <div className="feature-card">
+              <div className="feature-icon-circle">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              </div>
+              <h3>3. Instant Search</h3>
+              <p>Controlled input matching title and body text in real-time. Paired with debounce and instant clearing trigger button.</p>
+              <span className="feature-badge">SearchBar.jsx</span>
+            </div>
+
+            <div className="feature-card">
+              <div className="feature-icon-circle">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+              </div>
+              <h3>4. Mock REST API</h3>
+              <p>Persistent JSON Server endpoint serving a <code>blogs</code> array on <code>localhost:5000</code>. Centralized Axios client handles all HTTP methods.</p>
+              <span className="feature-badge">blogService.js</span>
+            </div>
+
+            <div className="feature-card">
+              <div className="feature-icon-circle">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2v4"/><path d="M12 18v4"/><path d="M4.93 4.93l2.83 2.83"/><path d="M16.24 16.24l2.83 2.83"/><path d="M2 12h4"/><path d="M18 12h4"/></svg>
+              </div>
+              <h3>5. Three State Feedbacks</h3>
+              <p>Informative visual feedback: Animated SVG loading spinner, styled network error banner with retry trigger, and intuitive empty prompt.</p>
+              <span className="feature-badge">LoadingSpinner / ErrorNotice</span>
+            </div>
+
+            <div className="feature-card">
+              <div className="feature-icon-circle">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+              </div>
+              <h3>6. Reusable Form</h3>
+              <p>Single <code>BlogForm.jsx</code> handles both post creation and post editing seamlessly with automatic state population.</p>
+              <span className="feature-badge">BlogForm.jsx</span>
+            </div>
+          </div>
+        )
+      },
+      {
+        id: "architecture",
+        tag: "Section 3 & 4 • System Architecture",
+        title: "Data Flow & Component Hierarchy",
+        subtitle: "Decoupled architecture: Services → Custom Hooks → Presentation Components",
+        render: () => (
+          <div className="arch-flow-box">
+            <div className="flow-row">
+              <div className="flow-node">
+                <div className="flow-node-title">Mock REST API Backend</div>
+                <div className="flow-node-sub">json-server --watch db.json --port 5000</div>
+              </div>
+              <div className="flow-arrow">⇄</div>
+              <div className="flow-node">
+                <div className="flow-node-title">Axios Service Layer</div>
+                <div className="flow-node-sub">blogService.js (getAll, create, update, remove)</div>
+              </div>
+              <div className="flow-arrow">⇄</div>
+              <div className="flow-node">
+                <div className="flow-node-title">State Hook Layer</div>
+                <div className="flow-node-sub">useBlogs.js & useWordCount.js</div>
+              </div>
+            </div>
+
+            <div style={{ textAlign: 'center', color: 'var(--accent)', fontSize: '1.5rem' }}>⇣</div>
+
+            <div className="flow-row">
+              <div className="flow-node" style={{ borderColor: 'var(--primary)', background: 'rgba(99, 102, 241, 0.15)' }}>
+                <div className="flow-node-title">App.jsx (Top-Level Coordinator)</div>
+                <div className="flow-node-sub">Coordinates Views (List, Add, Edit, Detail) & Notifications</div>
+              </div>
+            </div>
+
+            <div style={{ textAlign: 'center', color: 'var(--accent)', fontSize: '1.5rem' }}>⇣</div>
+
+            <div className="flow-row">
+              <div className="flow-node">
+                <div className="flow-node-title">SearchBar.jsx</div>
+                <div className="flow-node-sub">Instant Debounced Query</div>
+              </div>
+              <div className="flow-node">
+                <div className="flow-node-title">BlogList.jsx & BlogCard.jsx</div>
+                <div className="flow-node-sub">Responsive Grid & Actions</div>
+              </div>
+              <div className="flow-node">
+                <div className="flow-node-title">BlogForm.jsx</div>
+                <div className="flow-node-sub">1,000-Word Constraint Blocker</div>
+              </div>
+              <div className="flow-node">
+                <div className="flow-node-title">MediaViewer.jsx</div>
+                <div className="flow-node-sub">YouTube / MP4 / Image</div>
+              </div>
+            </div>
+          </div>
+        )
+      },
+      {
+        id: "wordcount",
+        tag: "Technical Specification Deep Dive",
+        title: "1,000-Word Constraint Enforcement",
+        subtitle: "Tokenization algorithm and interactive behavior",
+        render: () => (
+          <div className="grid-2col">
+            <div className="feature-card">
+              <h3>The Tokenization Algorithm</h3>
+              <p style={{ marginBottom: '1rem' }}>
+                Per specification, word count is evaluated on every keystroke by normalizing whitespace and filtering empty tokens:
+              </p>
+              <div style={{ background: '#090d16', padding: '1rem', borderRadius: '8px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', color: '#a5b4fc', marginBottom: '1rem' }}>
+                const words = text.trim().split(/\s+/).filter(Boolean);<br/>
+                const wordCount = words.length;<br/>
+                const isOverLimit = wordCount &gt; 1000;
+              </div>
+              <p>
+                <strong>Submission Blocker:</strong> When <code>isOverLimit === true</code>, the submit button is strictly disabled:
+              </p>
+              <div style={{ background: '#090d16', padding: '1rem', borderRadius: '8px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', color: '#fca5a5' }}>
+                &lt;button disabled={'{isOverLimit}'}&gt;Publish Post&lt;/button&gt;
+              </div>
+            </div>
+
+            <div className="feature-card">
+              <h3>Visual Feedback Indicators</h3>
+              <ul style={{ paddingLeft: '1.25rem', color: 'var(--text-2)', fontSize: '0.9rem', lineHeight: '1.8' }}>
+                <li><span style={{ color: '#34d399', fontWeight: 'bold' }}>Green Badge (&lt; 900 words):</span> Safe composition status.</li>
+                <li><span style={{ color: '#fbbf24', fontWeight: 'bold' }}>Amber Badge (900 - 1,000 words):</span> Approaching threshold indicator.</li>
+                <li><span style={{ color: '#f87171', fontWeight: 'bold' }}>Red Warning (&gt; 1,000 words):</span> Pulsing banner informing the author of exact excess word count.</li>
+                <li><span style={{ color: '#818cf8', fontWeight: 'bold' }}>Progress Track:</span> Real-time percentage indicator showing capacity.</li>
+              </ul>
+            </div>
+          </div>
+        )
+      }
+    ];
+
+    // Main Showcase Container Application
+    function PresentationApp() {
+      const [activeTab, setActiveTab] = useState('slides'); // 'slides' | 'demo' | 'files'
+      const [currentSlide, setCurrentSlide] = useState(0);
+      const [selectedFileIndex, setSelectedFileIndex] = useState(0);
+      const [copied, setCopied] = useState(false);
+
+      // Embedded Live Demo State
+      const [demoBlogs, setDemoBlogs] = useState([
+        {
+          id: "1",
+          title: "Getting Started with Modern Web Development",
+          content: "A comprehensive guide exploring component lifecycles, states, and hooks. Modern frontend development emphasizes modular architecture, reusable components, and reactive data flow. By decoupling API logic into dedicated services and custom hooks, applications maintain exceptional scalability, testability, and clear separation of concerns across teams.",
+          wordCount: 46,
+          imageUrl: "https://picsum.photos/seed/tech/800/400",
+          videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+          createdAt: "2026-11-08T09:30:00.000Z"
+        },
+        {
+          id: "2",
+          title: "Mastering React Hooks and Custom State Architecture",
+          content: "Custom hooks represent one of the most powerful paradigms introduced to the React ecosystem. By encapsulating stateful logic such as real-time word counting, network request debouncing, and API error recovery inside isolated functions like useBlogs and useWordCount, your UI presentation components remain clean, declarative, and focused solely on visual rendering.",
+          wordCount: 54,
+          imageUrl: "https://picsum.photos/seed/reacthooks/800/400",
+          videoUrl: "",
+          createdAt: "2026-11-08T10:15:00.000Z"
+        },
+        {
+          id: "3",
+          title: "Building Resilient REST API Integrations with Axios",
+          content: "Reliable data fetching requires robust error handling, loading states, and network timeouts. Implementing centralized Axios instances allows developers to configure base URLs, global request interceptors, authorization headers, and unified error parsing. Paired with informative UI feedback states like loading spinners and retry banners, users always stay informed of system status.",
+          wordCount: 51,
+          imageUrl: "https://picsum.photos/seed/api/800/400",
+          videoUrl: "https://www.youtube.com/embed/SqcY0GlETPk",
+          createdAt: "2026-11-08T10:45:00.000Z"
+        }
+      ]);
+
+      const [demoSearch, setDemoSearch] = useState('');
+      const [isAdding, setIsAdding] = useState(false);
+      const [editingId, setEditingId] = useState(null);
+      const [demoTitle, setDemoTitle] = useState('');
+      const [demoImage, setDemoImage] = useState('');
+      const [demoVideo, setDemoVideo] = useState('');
+      const [demoContent, setDemoContent] = useState('');
+      const [readingBlog, setReadingBlog] = useState(null);
+
+      // Keystroke word counter
+      const demoWordTokens = useMemo(() => {
+        const trimmed = demoContent.trim();
+        return trimmed ? trimmed.split(/\s+/).filter(Boolean) : [];
+      }, [demoContent]);
+      const demoWordCount = demoWordTokens.length;
+      const demoIsOverLimit = demoWordCount > 1000;
+      const demoExcess = demoIsOverLimit ? demoWordCount - 1000 : 0;
+
+      // Filtered blogs for search
+      const filteredBlogs = useMemo(() => {
+        if (!demoSearch.trim()) return demoBlogs;
+        const q = demoSearch.toLowerCase();
+        return demoBlogs.filter(b => b.title.toLowerCase().includes(q) || b.content.toLowerCase().includes(q));
+      }, [demoBlogs, demoSearch]);
+
+      const handleSaveBlog = (e) => {
+        e.preventDefault();
+        if (demoIsOverLimit || !demoTitle.trim() || !demoContent.trim()) return;
+
+        if (editingId) {
+          setDemoBlogs(prev => prev.map(b => b.id === editingId ? {
+            ...b,
+            title: demoTitle,
+            imageUrl: demoImage,
+            videoUrl: demoVideo,
+            content: demoContent,
+            wordCount: demoWordCount
+          } : b));
+        } else {
+          const newPost = {
+            id: Date.now().toString(),
+            title: demoTitle,
+            imageUrl: demoImage || 'https://picsum.photos/seed/' + Math.random() + '/800/400',
+            videoUrl: demoVideo,
+            content: demoContent,
+            wordCount: demoWordCount,
+            createdAt: new Date().toISOString()
+          };
+          setDemoBlogs([newPost, ...demoBlogs]);
+        }
+
+        // Reset
+        setIsAdding(false);
+        setEditingId(null);
+        setDemoTitle('');
+        setDemoImage('');
+        setDemoVideo('');
+        setDemoContent('');
+      };
+
+      const startEdit = (blog) => {
+        setEditingId(blog.id);
+        setDemoTitle(blog.title);
+        setDemoImage(blog.imageUrl || '');
+        setDemoVideo(blog.videoUrl || '');
+        setDemoContent(blog.content);
+        setIsAdding(true);
+      };
+
+      const deleteBlog = (id) => {
+        if (confirm("Delete this blog post?")) {
+          setDemoBlogs(prev => prev.filter(b => b.id !== id));
+          if (readingBlog && readingBlog.id === id) setReadingBlog(null);
+        }
+      };
+
+      const handleCopyCode = () => {
+        navigator.clipboard.writeText(PROJECT_FILES[selectedFileIndex].code);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      };
+
+      return (
+        <div>
+          {/* Header */}
+          <header className="showcase-header">
+            <div className="header-inner">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <span className="badge-pill">CRUD Studio</span>
+                <div className="header-title-box">
+                  <h1>Blog Studio (CRUD Architecture)</h1>
+                  <p>React.js • Axios • Mock JSON Server • 1,000-Word Constraint • Media Viewer</p>
+                </div>
+              </div>
+
+              {/* Tabs */}
+              <nav className="nav-tabs">
+                <button
+                  className={`nav-tab-btn ${activeTab === 'slides' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('slides')}
+                >
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                  Presentation Deck
+                </button>
+
+                <button
+                  className={`nav-tab-btn ${activeTab === 'demo' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('demo')}
+                >
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                  Interactive Live App
+                </button>
+
+                <button
+                  className={`nav-tab-btn ${activeTab === 'files' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('files')}
+                >
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  Code Explorer ({PROJECT_FILES.length} Files)
+                </button>
+              </nav>
+            </div>
+          </header>
+
+          {/* Main Showcase Container */}
+          <main className="showcase-container">
+            {/* TAB 1: PRESENTATION SLIDE DECK */}
+            {activeTab === 'slides' && (
+              <section className="slide-deck-wrapper">
+                {/* Progress */}
+                <div className="slide-progress-bar">
+                  <div
+                    className="slide-progress-fill"
+                    style={{ width: `${((currentSlide + 1) / SLIDES.length) * 100}%` }}
+                  />
+                </div>
+
+                {/* Slide Header */}
+                <div className="slide-header">
+                  <div>
+                    <span className="slide-meta-tag">{SLIDES[currentSlide].tag}</span>
+                    <h2 className="slide-title">{SLIDES[currentSlide].title}</h2>
+                    <p style={{ color: 'var(--text-2)', fontSize: '0.95rem', marginTop: '4px' }}>
+                      {SLIDES[currentSlide].subtitle}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Slide Content Body */}
+                <div className="slide-content-area">
+                  {SLIDES[currentSlide].render()}
+                </div>
+
+                {/* Footer Navigation */}
+                <div className="slide-footer-nav">
+                  <span className="slide-counter">
+                    Slide {currentSlide + 1} of {SLIDES.length}
+                  </span>
+
+                  <div style={{ display: 'flex', gap: '0.75rem' }}>
+                    <button
+                      className="slide-btn"
+                      disabled={currentSlide === 0}
+                      onClick={() => setCurrentSlide(prev => prev - 1)}
+                    >
+                      ← Previous
+                    </button>
+                    {currentSlide < SLIDES.length - 1 ? (
+                      <button
+                        className="slide-btn btn-accent"
+                        onClick={() => setCurrentSlide(prev => prev + 1)}
+                      >
+                        Next Slide →
+                      </button>
+                    ) : (
+                      <button
+                        className="slide-btn btn-accent"
+                        onClick={() => setActiveTab('demo')}
+                      >
+                        Launch Live App Demo →
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </section>
+            )}
+
+            {/* TAB 2: INTERACTIVE LIVE WORKING BLOG APP */}
+            {activeTab === 'demo' && (
+              <section className="live-demo-card">
+                <div className="live-demo-banner">
+                  <div>
+                    <h2 style={{ fontSize: '1.25rem', fontWeight: 800 }}>Live React Application Simulation</h2>
+                    <p style={{ fontSize: '0.85rem', color: 'var(--text-2)' }}>
+                      Test all CRUD features, 1,000-word constraint tokenizer, YouTube media embeds, and instant keyword search directly below!
+                    </p>
+                  </div>
+                  <button
+                    className="slide-btn btn-accent"
+                    onClick={() => {
+                      setIsAdding(!isAdding);
+                      setEditingId(null);
+                      setDemoTitle('');
+                      setDemoImage('');
+                      setDemoVideo('');
+                      setDemoContent('');
+                    }}
+                  >
+                    {isAdding ? 'Close Form' : '+ Create New Post'}
+                  </button>
+                </div>
+
+                {/* Form Box */}
+                {isAdding && (
+                  <form className="demo-form-box" onSubmit={handleSaveBlog}>
+                    <h3 style={{ marginBottom: '1.25rem', fontSize: '1.2rem' }}>
+                      {editingId ? 'Edit Blog Post' : 'Compose New Blog Post'}
+                    </h3>
+
+                    <input
+                      className="demo-input"
+                      type="text"
+                      placeholder="Article Title *"
+                      value={demoTitle}
+                      onChange={e => setDemoTitle(e.target.value)}
+                      required
+                    />
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                      <input
+                        className="demo-input"
+                        type="url"
+                        placeholder="Image URL (e.g., https://picsum.photos/seed/tech/800/400)"
+                        value={demoImage}
+                        onChange={e => setDemoImage(e.target.value)}
+                      />
+                      <input
+                        className="demo-input"
+                        type="url"
+                        placeholder="Video Embed URL (YouTube/MP4)"
+                        value={demoVideo}
+                        onChange={e => setDemoVideo(e.target.value)}
+                      />
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                      <label style={{ fontSize: '0.85rem', fontWeight: 600 }}>Post Content *</label>
+                      <span className={`demo-word-badge ${demoIsOverLimit ? 'badge-danger' : 'badge-ok'}`}>
+                        {demoWordCount} / 1,000 words
+                      </span>
+                    </div>
+
+                    <textarea
+                      className="demo-textarea"
+                      placeholder="Write your article body... Word count is calculated on keystroke."
+                      value={demoContent}
+                      onChange={e => setDemoContent(e.target.value)}
+                      required
+                    />
+
+                    {demoIsOverLimit && (
+                      <div className="banner-danger">
+                        <strong>Constraint Exceeded:</strong> Content exceeds 1,000 words ceiling by {demoExcess} words! The submit button has been disabled.
+                      </div>
+                    )}
+
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>
+                      <button
+                        type="button"
+                        className="slide-btn"
+                        onClick={() => setIsAdding(false)}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        className="slide-btn btn-accent"
+                        disabled={demoIsOverLimit || !demoTitle.trim() || !demoContent.trim()}
+                      >
+                        {editingId ? 'Save Changes' : 'Publish to REST API'}
+                      </button>
+                    </div>
+                  </form>
+                )}
+
+                {/* Search Bar */}
+                <div style={{ marginBottom: '1.75rem', display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                  <input
+                    type="text"
+                    className="demo-input"
+                    style={{ margin: 0 }}
+                    placeholder="Search posts by title or keyword..."
+                    value={demoSearch}
+                    onChange={e => setDemoSearch(e.target.value)}
+                  />
+                  {demoSearch && (
+                    <button
+                      className="slide-btn"
+                      onClick={() => setDemoSearch('')}
+                    >
+                      Clear
+                    </button>
+                  )}
+                  <span style={{ fontSize: '0.85rem', color: 'var(--text-2)', whiteSpace: 'nowrap' }}>
+                    {filteredBlogs.length} {filteredBlogs.length === 1 ? 'post' : 'posts'}
+                  </span>
+                </div>
+
+                {/* Grid */}
+                {filteredBlogs.length === 0 ? (
+                  <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-3)' }}>
+                    No blog posts match your criteria.
+                  </div>
+                ) : (
+                  <div className="demo-grid">
+                    {filteredBlogs.map(blog => (
+                      <article key={blog.id} className="demo-blog-card">
+                        <div className="demo-card-media" onClick={() => setReadingBlog(blog)} style={{ cursor: 'pointer' }}>
+                          {blog.videoUrl ? (
+                            <iframe
+                              src={blog.videoUrl.includes('embed') ? blog.videoUrl : `https://www.youtube.com/embed/${(blog.videoUrl.match(/(?:watch\?v=|youtu\.be\/)([^&]+)/) || [])[1] || ''}`}
+                              title={blog.title}
+                              allowFullScreen
+                            />
+                          ) : (
+                            <img src={blog.imageUrl} alt={blog.title} />
+                          )}
+                        </div>
+
+                        <div className="demo-card-body">
+                          <div className="demo-card-meta">
+                            <span>{new Date(blog.createdAt).toLocaleDateString()}</span>
+                            <span className="demo-card-word-count">{blog.wordCount || 0} words</span>
+                          </div>
+                          <h4 className="demo-card-title">{blog.title}</h4>
+                          <p className="demo-card-text">{blog.content.substring(0, 140)}...</p>
+                        </div>
+
+                        <div className="demo-card-actions">
+                          <button className="demo-action-btn" onClick={() => setReadingBlog(blog)}>Read</button>
+                          <button className="demo-action-btn" onClick={() => startEdit(blog)}>Edit</button>
+                          <button className="demo-action-btn btn-delete" onClick={() => deleteBlog(blog.id)}>Delete</button>
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                )}
+
+                {/* Reader Modal */}
+                {readingBlog && (
+                  <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(8px)', zIndex: 2000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1.5rem' }}>
+                    <div style={{ background: '#131b2e', border: '1px solid var(--border-subtle)', borderRadius: '20px', maxWidth: '700px', width: '100%', maxHeight: '90vh', overflowY: 'auto', padding: '2rem' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                        <span className="demo-word-badge badge-ok">{readingBlog.wordCount} words</span>
+                        <button className="slide-btn" onClick={() => setReadingBlog(null)}>✕ Close</button>
+                      </div>
+
+                      {readingBlog.videoUrl && (
+                        <div style={{ aspectRatio: '16/9', marginBottom: '1.5rem' }}>
+                          <iframe
+                            src={readingBlog.videoUrl}
+                            style={{ width: '100%', height: '100%', border: 'none', borderRadius: '12px' }}
+                            allowFullScreen
+                          />
+                        </div>
+                      )}
+
+                      <h2 style={{ fontSize: '1.6rem', marginBottom: '1rem', color: '#fff' }}>{readingBlog.title}</h2>
+                      <p style={{ color: '#cbd5e1', lineHeight: '1.8', whiteSpace: 'pre-line' }}>{readingBlog.content}</p>
+
+                      <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>
+                        <button className="slide-btn" onClick={() => { startEdit(readingBlog); setReadingBlog(null); }}>Edit Post</button>
+                        <button className="slide-btn btn-accent" onClick={() => setReadingBlog(null)}>Done Reading</button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </section>
+            )}
+
+            {/* TAB 3: CODE & FILE EXPLORER */}
+            {activeTab === 'files' && (
+              <section className="code-explorer-layout">
+                {/* File Sidebar */}
+                <aside className="file-sidebar">
+                  <div className="file-group-title">Project Structure (Assignment 9)</div>
+                  {PROJECT_FILES.map((file, idx) => (
+                    <button
+                      key={file.path}
+                      className={`file-tree-item ${selectedFileIndex === idx ? 'active' : ''}`}
+                      onClick={() => setSelectedFileIndex(idx)}
+                    >
+                      <span>{file.path}</span>
+                    </button>
+                  ))}
+                </aside>
+
+                {/* File Viewer Main */}
+                <main className="file-viewer-main">
+                  <div className="file-viewer-header">
+                    <div className="file-viewer-title-group">
+                      <h2>{PROJECT_FILES[selectedFileIndex].path}</h2>
+                      <p>{PROJECT_FILES[selectedFileIndex].summary}</p>
+                    </div>
+
+                    <button className="copy-btn" onClick={handleCopyCode}>
+                      {copied ? '✓ Copied!' : 'Copy File Content'}
+                    </button>
+                  </div>
+
+                  <div className="code-editor-box">
+                    {PROJECT_FILES[selectedFileIndex].code}
+                  </div>
+                </main>
+              </section>
+            )}
+          </main>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('presentation-root')).render(<PresentationApp />);
+  </script>
+</body>
+</html>

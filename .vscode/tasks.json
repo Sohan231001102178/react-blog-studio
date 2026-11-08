@@ -1,0 +1,40 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Start JSON Server (Mock REST API)",
+      "type": "shell",
+      "command": "cmd.exe /c \"npx json-server --watch db.json --port 5000\"",
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "group": "servers"
+      }
+    },
+    {
+      "label": "Start Vite Dev Server",
+      "type": "shell",
+      "command": "cmd.exe /c \"npm.cmd run dev\"",
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "group": "servers"
+      }
+    },
+    {
+      "label": "Run Both (Frontend & REST API)",
+      "dependsOn": [
+        "Start JSON Server (Mock REST API)",
+        "Start Vite Dev Server"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    }
+  ]
+}

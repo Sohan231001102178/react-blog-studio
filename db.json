@@ -1,0 +1,31 @@
+{
+  "blogs": [
+    {
+      "id": "1",
+      "title": "Getting Started with Modern Web Development",
+      "content": "A comprehensive guide exploring component lifecycles, states, and hooks. Modern frontend development emphasizes modular architecture, reusable components, and reactive data flow. By decoupling API logic into dedicated services and custom hooks, applications maintain exceptional scalability, testability, and clear separation of concerns across teams.",
+      "wordCount": 46,
+      "imageUrl": "https://picsum.photos/seed/tech/800/400",
+      "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+      "createdAt": "2026-11-08T09:30:00.000Z"
+    },
+    {
+      "id": "2",
+      "title": "Mastering React Hooks and Custom State Architecture",
+      "content": "Custom hooks represent one of the most powerful paradigms introduced to the React ecosystem. By encapsulating stateful logic such as real-time word counting, network request debouncing, and API error recovery inside isolated functions like useBlogs and useWordCount, your UI presentation components remain clean, declarative, and focused solely on visual rendering.",
+      "wordCount": 54,
+      "imageUrl": "https://picsum.photos/seed/reacthooks/800/400",
+      "videoUrl": "",
+      "createdAt": "2026-11-08T10:15:00.000Z"
+    },
+    {
+      "id": "3",
+      "title": "Building Resilient REST API Integrations with Axios",
+      "content": "Reliable data fetching requires robust error handling, loading states, and network timeouts. Implementing centralized Axios instances allows developers to configure base URLs, global request interceptors, authorization headers, and unified error parsing. Paired with informative UI feedback states like loading spinners and retry banners, users always stay informed of system status.",
+      "wordCount": 51,
+      "imageUrl": "https://picsum.photos/seed/api/800/400",
+      "videoUrl": "https://www.youtube.com/embed/SqcY0GlETPk",
+      "createdAt": "2026-11-08T10:45:00.000Z"
+    }
+  ]
+}
